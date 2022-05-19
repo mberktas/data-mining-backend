@@ -13,7 +13,6 @@ const pythonRunner = (pythonFile, args) => {
 
     python.on('close', (code) => {
       console.log(`child process all stdio with code ${code}`)
-      console.log(FIM)
       resolve(FIM.join(''))
     })
   })

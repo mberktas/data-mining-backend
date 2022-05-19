@@ -64,12 +64,15 @@ def aprioriFromFile(fname, minSup, minConf):
         k += 1
 
     rules = associationRule(globalFreqItemSet, globalItemSetWithSup, minConf)
-    rules.sort(key=lambda x: x[2])
+    #rules.sort(key=lambda x: x[2])
 
 
-    for rule in rules:
-        print(rule)
-    #print(rules)
+    # for rule in rules:
+    #     print(rule)
+    data = {"datas" : rules , "transaction" : itemSetList.__len__() , "frequentItemSet" : L1ItemSet.__len__()}
+    print(json.dumps(data))
+    #print({"transaction" : itemSetList.__len__() , "frequentItemSet" : L1ItemSet.__len__()})
+    
    #print(globalFreqItemSet)
     return globalFreqItemSet, rules
 
@@ -99,7 +102,10 @@ def associationRule(freqItemSet, itemSetWithSup, minConf):
                 confidence = float(
                     itemSetWithSup[item] / itemSetWithSup[frozenset(s)])
                 if(confidence > minConf):
-                    rules.append([set(s), set(item.difference(s)), confidence])
+                    target = item.difference(s)
+                    target = next(iter(target))
+                    rules.append({"source" : s, "target" : target, "confidence" : confidence , "support" : itemSetWithSup[item]})
+                    # rules.append([{"source" : set(s), "target" : set(item.difference(s)), "confidence" : confidence , "support" : itemSetWithSup[item]}])
     return rules
 
 
@@ -112,17 +118,17 @@ if __name__ == "__main__":
     optparser.add_option('-f', '--inputFile',
                          dest='inputFile',
                          help='CSV filename',
-                         default="tesco2.csv",
+                         default="C:/Users/Muhammet/Desktop/node/scripts/python/tesco2.csv",
                          type='str')
     optparser.add_option('-s', '--minSupport',
                          dest='minSup',
                          help='Min support (float)',
-                         default=0.5,
+                         default=0.1,
                          type='float')
     optparser.add_option('-c', '--minConfidence',
                          dest='minConf',
                          help='Min confidence (float)',
-                         default=0.5,
+                         default=0.1,
                          type='float')
 
     (options, args) = optparser.parse_args()
